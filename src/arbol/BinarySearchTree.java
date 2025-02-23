@@ -15,6 +15,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
     public BinarySearchTree() {
         root = null;
     }
+    
+    public Node<T> getRoot(){
+        return root;
+    }
 
     public Node<T> insert(Node<T> rootNode, T data) {
         if (rootNode == null) {
