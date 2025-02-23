@@ -47,33 +47,39 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
     }
 
-    public void inOrderTraversal(Node<T> rootNode) {
+    public String inOrderTraversal(Node<T> rootNode) {
+        String recorrido = "";
         if (rootNode == null) {
-            return;
+            return recorrido;
         }
-        
+
         inOrderTraversal(rootNode.left);
-        System.out.println(rootNode.data + " ");
+        recorrido += rootNode.data.toString();
         inOrderTraversal(rootNode.right);
+        return recorrido;
     }
 
-    public void preOrderTraversal(Node<T> rootNode) {
-        if(rootNode == null){
-            return;
+    public String preOrderTraversal(Node<T> rootNode) {
+        String recorrido="";
+        if (rootNode == null) {
+            return recorrido;
         }
-        
-        System.out.println(rootNode.data + " ");
+
+    
         preOrderTraversal(rootNode.left);
         preOrderTraversal(rootNode.right);
+        return recorrido;
     }
-    
-    public void postOrderTraversal(Node<T> rootNode){
-        if(rootNode == null){
-            return;
+
+    public String postOrderTraversal(Node<T> rootNode) {
+        String recorrido= "";
+        if (rootNode == null) {
+            return recorrido;
         }
-        
+
         postOrderTraversal(rootNode.left);
         postOrderTraversal(rootNode.right);
-        System.out.println(rootNode.data + " ");
+        return recorrido;
     }
+
 }
