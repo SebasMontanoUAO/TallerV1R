@@ -10,20 +10,9 @@ package arbol;
  */
 public class BinarySearchTree<T extends Comparable<T>> {
 
-    private Node<T> root;
-
-    public BinarySearchTree() {
-        root = null;
-    }
-    
-    public Node<T> getRoot(){
-        return root;
-    }
-
-    public Node<T> insert(Node<T> rootNode, T data) {
+    public static <T extends Comparable<T>> Node<T> insert(Node<T> rootNode, T data) {
         if (rootNode == null) {
-            rootNode = new Node<T>(data);
-            return rootNode;
+            return new Node(data);
         }
 
         if (data.compareTo(rootNode.data) < 0) {
@@ -32,58 +21,60 @@ public class BinarySearchTree<T extends Comparable<T>> {
             rootNode.right = insert(rootNode.right, data);
         }
 
-        return root;
+        return rootNode;
     }
 
-    public boolean search(Node<T> rootNode, T data) {
-        if (rootNode == null) {
-            return false;
-        }
-
-        if (data.compareTo(rootNode.data) == 0) {
-            return true;
+    public static <T extends Comparable<T>> Node<T> search(Node<T> rootNode, T data) {
+        if (rootNode == null || rootNode.data == data) {
+            return rootNode;
         }
 
         if (data.compareTo(rootNode.data) < 0) {
             return search(rootNode.left, data);
-        } else {
-            return search(rootNode.right, data);
+        }
+
+        return search(rootNode.right, data);
+    }
+
+    public static <T extends Comparable<T>> String inOrderTraversal(Node<T> rootNode) {
+        StringBuilder recorrido = new StringBuilder();
+        inOrderTraversalToString(rootNode, recorrido);
+        return recorrido.toString();
+    }
+
+    private static <T extends Comparable<T>> void inOrderTraversalToString(Node<T> rootNode, StringBuilder recorrido) {
+        if (rootNode != null) {
+            inOrderTraversalToString(rootNode.left, recorrido);
+            recorrido.append(rootNode.data.toString()).append("");
+            inOrderTraversalToString(rootNode.right, recorrido);
         }
     }
 
-    public String inOrderTraversal(Node<T> rootNode) {
-        String recorrido = "";
-        if (rootNode == null) {
-            return recorrido;
-        }
-
-        inOrderTraversal(rootNode.left);
-        recorrido += rootNode.data.toString();
-        inOrderTraversal(rootNode.right);
-        return recorrido;
+    public static <T extends Comparable<T>> String preOrderTraversal(Node<T> rootNode) {
+        StringBuilder recorrido = new StringBuilder();
+        preOrderTraversalToString(rootNode, recorrido);
+        return recorrido.toString();
     }
 
-    public String preOrderTraversal(Node<T> rootNode) {
-        String recorrido="";
-        if (rootNode == null) {
-            return recorrido;
+    private static <T extends Comparable<T>> void preOrderTraversalToString(Node<T> rootNode, StringBuilder recorrido) {
+        if (rootNode != null) {
+            recorrido.append(rootNode.data.toString()).append("");
+            preOrderTraversalToString(rootNode.left, recorrido);
+            preOrderTraversalToString(rootNode.right, recorrido);
         }
+    }
 
+    public static <T extends Comparable<T>> String postOrderTraversal(Node<T> rootNode) {
+        StringBuilder recorrido = new StringBuilder();
+        postOrderTraversalToString(rootNode, recorrido);
+        return recorrido.toString();
+    }
     
-        preOrderTraversal(rootNode.left);
-        preOrderTraversal(rootNode.right);
-        return recorrido;
-    }
-
-    public String postOrderTraversal(Node<T> rootNode) {
-        String recorrido= "";
-        if (rootNode == null) {
-            return recorrido;
+    private static <T extends Comparable<T>> void postOrderTraversalToString(Node<T> rootNode, StringBuilder recorrido) {
+        if (rootNode != null) {
+            recorrido.append(rootNode.data.toString()).append("");
+            postOrderTraversalToString(rootNode.left, recorrido);
+            postOrderTraversalToString(rootNode.right, recorrido);
         }
-
-        postOrderTraversal(rootNode.left);
-        postOrderTraversal(rootNode.right);
-        return recorrido;
     }
-
 }

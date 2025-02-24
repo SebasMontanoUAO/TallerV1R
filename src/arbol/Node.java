@@ -9,9 +9,9 @@ package arbol;
  * @author Familia
  */
 public class Node<T extends Comparable<T>> {
-    T data;
-    Node left;
-    Node right;
+    public T data;
+    public Node left;
+    public Node right;
     
     public Node(T value){
         data = value;
