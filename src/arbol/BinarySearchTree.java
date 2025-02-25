@@ -4,6 +4,12 @@
  */
 package arbol;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.io.FileReader;
+import java.lang.reflect.Type;
+
 /**
  *
  * @author Familia
@@ -69,12 +75,75 @@ public class BinarySearchTree<T extends Comparable<T>> {
         postOrderTraversalToString(rootNode, recorrido);
         return recorrido.toString();
     }
-    
+
     private static <T extends Comparable<T>> void postOrderTraversalToString(Node<T> rootNode, StringBuilder recorrido) {
         if (rootNode != null) {
-            recorrido.append(rootNode.data.toString()).append("");
             postOrderTraversalToString(rootNode.left, recorrido);
             postOrderTraversalToString(rootNode.right, recorrido);
+            recorrido.append(rootNode.data.toString()).append("");
         }
+    }
+
+    public static <T extends Comparable<T>> TreeNodeJson<T> convertToJsonStructure(Node<T> rootNode) {
+        if (rootNode == null) {
+            return null;
+        }
+
+        TreeNodeJson<T> jsonNode = new TreeNodeJson<>(rootNode.data);
+        jsonNode.setLeft(convertToJsonStructure(rootNode.left));
+        jsonNode.setRight(convertToJsonStructure(rootNode.right));
+
+        return jsonNode;
+    }
+
+    public static <T extends Comparable<T>> void saveTreeToJson(Node<T> root, String filePath) {
+        // Convertir el árbol a una estructura JSON
+        TreeNodeJson<T> jsonRoot = convertToJsonStructure(root);
+
+        // Crear una instancia de Gson
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        // Convertir a JSON
+        String json = gson.toJson(jsonRoot);
+
+        // Guardar el JSON en un archivo
+        try (java.io.FileWriter writer = new java.io.FileWriter(filePath)) {
+            writer.write(json);
+            System.out.println("Árbol guardado en: " + filePath);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T extends Comparable<T>> Node<T> loadTreeFromJson(String filePath, Class<T> clase) {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader(filePath)) {
+            // Definir el tipo genérico para Gson
+            Type type = TypeToken.getParameterized(TreeNodeJson.class, clase).getType();
+
+            // Leer el JSON y convertirlo a TreeNodeJson
+            TreeNodeJson<T> jsonRoot = gson.fromJson(reader, type);
+
+            // Convertir TreeNodeJson a Node<T>
+            return convertFromJsonStructure(jsonRoot);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static <T extends Comparable<T>> Node<T> convertFromJsonStructure(TreeNodeJson<T> jsonNode) {
+        if (jsonNode == null) {
+            return null;
+        }
+
+        // Crear el nodo actual
+        Node<T> node = new Node<>(jsonNode.getData());
+
+        // Convertir los hijos recursivamente
+        node.left = convertFromJsonStructure(jsonNode.getLeft());
+        node.right = convertFromJsonStructure(jsonNode.getRight());
+
+        return node;
     }
 }
